@@ -61,7 +61,7 @@ class AboutPage(QWidget):
         card_layout.addWidget(features_title)
 
         features = [
-            "อัลกอริทึมซ่อนข้อมูลแบบ Spatial Domain 10 วิธี",
+            "อัลกอริทึมซ่อนข้อมูลแบบ Spatial Domain 5 วิธี",
             "ตรวจจับอัลกอริทึมที่ใช้อัตโนมัติตอนถอนข้อมูล",
             "ซ่อนเสียง (WAV/MP3) ในวิดีโอ (MP4/MKV/AVI/MOV)",
             "วิเคราะห์ผลครบถ้วน (PSNR, SSIM, MSE, BER)",

@@ -48,8 +48,7 @@ class SettingsPage(QWidget):
         self.default_algo = QComboBox()
         self.default_algo.addItems([
             "Standard LSB 1-Bit", "Standard LSB 2-Bit", "Standard LSB 3-Bit",
-            "Random LSB", "Adaptive LSB", "Edge-Based LSB",
-            "LSBM", "LSBMR", "PVD", "BPCS", "OPAP", "PIT"
+            "Random LSB", "Adaptive LSB",
         ])
         algo_layout.addRow("อัลกอริทึมเริ่มต้น:", self.default_algo)
         layout.addWidget(algo_group)

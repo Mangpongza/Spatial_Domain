@@ -6,20 +6,11 @@ ALGORITHM_NAMES = {
     2: "Standard LSB 3-Bit",
     3: "Random LSB",
     4: "Adaptive LSB",
-    5: "Edge-Based LSB",
-    6: "LSBM",
-    7: "LSBMR",
-    8: "PVD",
-    9: "BPCS",
-    10: "OPAP",
-    11: "PIT",
 }
 
 ALGORITHM_IDS = {v: k for k, v in ALGORITHM_NAMES.items()}
 
-AUTO_DETECTION_ORDER = [
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
-]
+AUTO_DETECTION_ORDER = [0, 1, 2, 3, 4]
 
 HEADER_SIZE_BYTES = 64
 

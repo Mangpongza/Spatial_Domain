@@ -111,13 +111,6 @@ class EmbedPage(QWidget):
         self.algo_combo.addItem("Standard LSB 3-Bit", 2)
         self.algo_combo.addItem("Random LSB", 3)
         self.algo_combo.addItem("Adaptive LSB", 4)
-        self.algo_combo.addItem("Edge-Based LSB", 5)
-        self.algo_combo.addItem("LSBM", 6)
-        self.algo_combo.addItem("LSBMR", 7)
-        self.algo_combo.addItem("PVD", 8)
-        self.algo_combo.addItem("BPCS", 9)
-        self.algo_combo.addItem("OPAP", 10)
-        self.algo_combo.addItem("PIT", 11)
         self.algo_combo.setMinimumWidth(200)
 
         algo_row.addWidget(QLabel("อัลกอริทึม:"))

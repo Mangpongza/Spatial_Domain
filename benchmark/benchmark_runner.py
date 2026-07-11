@@ -20,7 +20,7 @@ class BenchmarkRunner(QThread):
 
     def run(self):
         log_emitter.emit("Starting benchmark...")
-        algo_ids = list(range(12))
+        algo_ids = [0, 1, 2, 3, 4]
         payload = b"A" * self.payload_size
 
         for idx, aid in enumerate(algo_ids):

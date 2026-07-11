@@ -108,7 +108,8 @@ class EmbedWorker(QThread):
             self.progress.emit(80)
             log_emitter.emit("Rebuilding video...")
             actual_output = video_service.frames_to_video(
-                stego_frames, self.output_path, video_model.fps
+                stego_frames, self.output_path, video_model.fps,
+                original_codec=video_model.codec
             )
             if actual_output:
                 self.output_path = actual_output

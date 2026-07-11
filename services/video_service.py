@@ -4,7 +4,8 @@ import numpy as np
 from models.video_model import VideoModel
 from utils.logging import log_emitter
 
-LOSSLESS_CODECS = [("FFV1", ".mkv"), ("HFYU", ".avi"), ("PNG ", ".avi")]
+# ลอง PNG > FFV1 > HFYU เพื่อ compatibility (PNG .avi เปิดได้ทั่วไป)
+LOSSLESS_CODECS = [("PNG ", ".avi"), ("FFV1", ".mkv"), ("HFYU", ".avi")]
 
 
 class VideoService:
@@ -35,12 +36,14 @@ class VideoService:
         return os.path.join(output_dir, f"{prefix}_%06d.png")
 
     def frames_to_video(
-        self, frames: np.ndarray, output_path: str, fps: float
+        self, frames: np.ndarray, output_path: str, fps: float,
+        original_codec: str = ""
     ) -> str:
         log_emitter.emit(f"Rebuilding video: {output_path}")
         h, w = frames[0].shape[:2]
-        base = os.path.splitext(output_path)[0]
 
+        # Lossless ก่อน — LSB ต้องไม่ถูกทำลาย
+        base = os.path.splitext(output_path)[0]
         for codec, ext in LOSSLESS_CODECS:
             lossless_path = f"{base}{ext}"
             fourcc = cv2.VideoWriter_fourcc(*codec)
@@ -50,18 +53,30 @@ class VideoService:
                     out.write(frame)
                 out.release()
                 if os.path.exists(lossless_path) and os.path.getsize(lossless_path) > 0:
-                    log_emitter.emit(f"Saved lossless video: {lossless_path}")
+                    log_emitter.emit(f"Saved: {lossless_path} ({codec})")
                     return lossless_path
             out.release()
 
-        log_emitter.emit("WARNING: No lossless codec available, falling back to mp4v")
+        # Fallback ถ้า lossless ทั้งหมดใช้ไม่ได้
+        log_emitter.emit("WARNING: No lossless codec, falling back to original codec (data may not survive)")
+        if original_codec and len(original_codec) == 4:
+            fourcc = cv2.VideoWriter_fourcc(*original_codec)
+            out = cv2.VideoWriter(output_path, fourcc, fps, (w, h))
+            if out.isOpened():
+                for frame in frames:
+                    out.write(frame)
+                out.release()
+                if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
+                    return output_path
+            out.release()
+
         fourcc = cv2.VideoWriter_fourcc(*"mp4v")
         out = cv2.VideoWriter(output_path, fourcc, fps, (w, h))
         if out.isOpened():
             for frame in frames:
                 out.write(frame)
             out.release()
-            log_emitter.emit("Video rebuilt successfully")
+            log_emitter.emit("Saved (mp4v fallback)")
             return output_path
         out.release()
         raise RuntimeError("Could not open any VideoWriter codec")

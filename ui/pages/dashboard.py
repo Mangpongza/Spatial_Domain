@@ -52,8 +52,8 @@ class DashboardPage(QWidget):
         stats_grid.setSpacing(16)
 
         self.cards = {
-            "algorithms": StatCard("อัลกอริทึมที่รองรับ", "10 วิธี", color="#533483"),
-            "methods": StatCard("วิธีการฝัง", "Standard LSB / Random / Adaptive / Edge / LSBM / LSBMR / PVD / BPCS / OPAP / PIT", color="#0f3460"),
+            "algorithms": StatCard("อัลกอริทึมที่รองรับ", "5 วิธี", color="#533483"),
+            "methods": StatCard("วิธีการฝัง", "Standard LSB 1/2/3-Bit / Random LSB / Adaptive LSB", color="#0f3460"),
             "detection": StatCard("การตรวจจับ", "ตรวจจับอัลกอริทึมอัตโนมัติ", color="#00cc88"),
             "formats": StatCard("รูปแบบที่รองรับ", "วิดีโอ: MP4, MKV, AVI, MOV\nเสียง: WAV, MP3", color="#ffaa00"),
         }
