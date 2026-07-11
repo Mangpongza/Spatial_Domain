@@ -20,9 +20,17 @@ class StandardLSB(BaseStegoAlgorithm):
         stego = frames.copy()
         flat = stego[:, :, :, 0].ravel()
         mask = (1 << self.bits) - 1
-        for i in range(min(len(data_bits), len(flat))):
+        n_data = len(data_bits)
+        n_data_aligned = n_data + (-n_data % self.bits) if n_data % self.bits else n_data
+        if n_data_aligned > n_data:
+            data_bits = np.pad(data_bits, (0, n_data_aligned - n_data), 'constant')
+        n_pixels = min(n_data_aligned // self.bits, len(flat))
+        for i in range(n_pixels):
+            val = 0
+            for b in data_bits[i * self.bits:(i + 1) * self.bits]:
+                val = (val << 1) | int(b)
             pval = int(flat[i])
-            pval = (pval & ~mask) | (int(data_bits[i]) & mask)
+            pval = (pval & ~mask) | (val & mask)
             flat[i] = np.clip(pval, 0, 255)
         stego[:, :, :, 0] = flat.reshape(stego[:, :, :, 0].shape)
         return stego
@@ -30,11 +38,15 @@ class StandardLSB(BaseStegoAlgorithm):
     def extract(self, frames: np.ndarray, payload_size: int) -> bytes:
         flat = frames[:, :, :, 0].ravel()
         total_bits = payload_size * 8
-        n_pixels = len(flat)
+        n_pixels = min((total_bits + self.bits - 1) // self.bits, len(flat))
         mask = (1 << self.bits) - 1
-        limit = min(total_bits, n_pixels)
-        bits = np.array([int(flat[i]) & mask for i in range(limit)], dtype=np.uint8)
-        return np.packbits(bits).tobytes()[:payload_size]
+        bits = []
+        for i in range(n_pixels):
+            val = int(flat[i]) & mask
+            for b in range(self.bits - 1, -1, -1):
+                bits.append((val >> b) & 1)
+        result = np.array(bits[:total_bits], dtype=np.uint8)
+        return np.packbits(result).tobytes()[:payload_size]
 
     def capacity(self, frames: np.ndarray) -> int:
         return int(frames.shape[0]) * int(frames.shape[1]) * int(frames.shape[2]) * self.bits // 8
