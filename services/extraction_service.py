@@ -1,4 +1,5 @@
 import os
+import math
 import time
 import numpy as np
 from PyQt6.QtCore import QThread, pyqtSignal
@@ -39,9 +40,14 @@ class ExtractWorker(QThread):
             audio_service = AudioService()
 
             video_model = video_service.open(self.video_path)
+            px_per_frame = video_model.width * video_model.height
 
-            self.progress.emit(20)
-            frames_array = video_service.read_all_frames(video_model)
+            self.progress.emit(15)
+            # Phase 1: read only a few frames for header detection
+            frames_for_header = max(3, math.ceil(HEADER_SIZE * 8 / px_per_frame))
+            log_emitter.emit(f"Reading {frames_for_header} frames for header detection...")
+            frames_array = video_service.read_all_frames(video_model, max_frames=frames_for_header)
+            n_total = len(frames_array)
 
             self.progress.emit(30)
             algo_ids = (
@@ -78,19 +84,43 @@ class ExtractWorker(QThread):
                     detected_algo_id = aid
                     header_info = parsed
                     log_emitter.emit(f"Algorithm Detected: {name}")
-
-                    self.progress.emit(60)
-                    log_emitter.emit("Extracting audio...")
-                    payload_size = parsed["payload_size"]
-                    total_to_extract = HEADER_SIZE + payload_size
-                    payload_raw = algo.extract(frames_array, total_to_extract)
-                    payload = payload_raw[HEADER_SIZE:HEADER_SIZE + payload_size]
                     break
                 else:
                     log_emitter.emit("Failed")
 
-            if detected_algo_id is None or payload is None:
-                raise ValueError("Could not detect algorithm or extract payload")
+            if detected_algo_id is None:
+                raise ValueError("Could not detect any algorithm in the video")
+
+            # Phase 2: read more frames if needed for full payload
+            payload_size = header_info["payload_size"]
+            total_to_extract = HEADER_SIZE + payload_size
+            bits_in_frame = px_per_frame * header_info.get("lsb_mode", 1)
+            needed_frames = math.ceil(total_to_extract * 8 / bits_in_frame)
+
+            if needed_frames > n_total:
+                log_emitter.emit(f"Need {needed_frames} frames, reading more...")
+                # Re-open and read the required number of frames
+                video_model2 = video_service.open(self.video_path)
+                max_read = min(needed_frames, 500)
+                frames_array = video_service.read_all_frames(video_model2, max_frames=max_read)
+                n_total = len(frames_array)
+                log_emitter.emit(f"Now have {n_total} frames")
+
+            # Re-create algo with correct bits for extraction
+            algo_class = get_algorithm(detected_algo_id)
+            if detected_algo_id in (0, 1, 2):
+                bits = {0: 1, 1: 2, 2: 3}.get(detected_algo_id, 1)
+                algo = algo_class(bits=bits)
+            else:
+                algo = algo_class()
+
+            self.progress.emit(60)
+            log_emitter.emit("Extracting audio...")
+            payload_raw = algo.extract(frames_array, total_to_extract)
+            payload = payload_raw[HEADER_SIZE:HEADER_SIZE + payload_size]
+
+            if payload is None or len(payload) == 0:
+                raise ValueError("Extracted payload is empty")
 
             self.progress.emit(80)
             log_emitter.emit(f"Saving extracted audio ({len(payload)} bytes)...")

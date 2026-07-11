@@ -33,7 +33,7 @@ class VideoModel:
         self.frames = []
         return True
 
-    def read_frames(self) -> list[np.ndarray]:
+    def read_frames(self, max_frames: int = 0) -> list[np.ndarray]:
         if not self.cap:
             return []
         self.frames = []
@@ -42,6 +42,8 @@ class VideoModel:
             if not ret:
                 break
             self.frames.append(frame)
+            if max_frames > 0 and len(self.frames) >= max_frames:
+                break
         self.cap.release()
         self.cap = None
         return self.frames

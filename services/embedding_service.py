@@ -1,4 +1,5 @@
 import os
+import math
 import time
 import numpy as np
 from PyQt6.QtCore import QThread, pyqtSignal
@@ -40,47 +41,57 @@ class EmbedWorker(QThread):
 
             video_service = VideoService()
             audio_service = AudioService()
-            ffmpeg = FFmpegService()
 
             video_model = video_service.open(self.video_path)
             audio_model = audio_service.open(self.audio_path)
 
-            self.progress.emit(10)
-            log_emitter.emit("Extracting original audio from video...")
-            temp_audio = os.path.join(
-                os.path.dirname(self.output_path), "_original_audio.wav"
-            )
-            ffmpeg.extract_audio(self.video_path, temp_audio)
-            video_model.original_audio_path = temp_audio
-
             self.progress.emit(20)
-            frames_array = video_service.read_all_frames(video_model)
-
-            self.progress.emit(30)
-            log_emitter.emit("Converting audio to binary...")
+            log_emitter.emit("Converting audio to bytes...")
             audio_data = audio_service.get_bytes(audio_model)
             payload = audio_data
             payload_size = len(payload)
 
-            self.progress.emit(40)
+            self.progress.emit(30)
             log_emitter.emit("Building header...")
             header = build_header(
                 algorithm_id=self.algorithm_id,
                 lsb_mode=self.lsb_mode,
                 payload_size=payload_size,
-                audio_format=audio_model.model.format_id,
+                audio_format=audio_model.format_id,
                 version=1,
             )
 
             full_payload = header + payload
 
-            self.progress.emit(50)
-            log_emitter.emit("Checking capacity...")
-            algo_class = get_algorithm(self.algorithm_id)
-            algo = algo_class()
+            # Calculate how many frames we need
+            bits_per_px = self.lsb_mode
             if self.algorithm_id in (0, 1, 2):
-                bits = {0: 1, 1: 2, 2: 3}.get(self.algorithm_id, 1)
+                bits_per_px = {0: 1, 1: 2, 2: 3}.get(self.algorithm_id, 1)
+            bits_per_frame = video_model.width * video_model.height * bits_per_px
+            needed_frames = math.ceil(len(full_payload) * 8 / bits_per_frame)
+
+            log_emitter.emit(f"Need {needed_frames} frames (capacity: {bits_per_frame} bits/frame)")
+
+            # Cap to available frames (but log warning if not enough)
+            if needed_frames > video_model.total_frames:
+                raise ValueError(
+                    f"Audio too large! Need {needed_frames} frames but video only has {video_model.total_frames}. "
+                    f"Use shorter audio, higher resolution video, or more bits per pixel."
+                )
+
+            self.progress.emit(40)
+            log_emitter.emit(f"Reading all {video_model.total_frames} frames...")
+            frames_array = video_service.read_all_frames(video_model)
+            actual_frames = len(frames_array)
+            log_emitter.emit(f"Read {actual_frames} frames")
+
+            # Check capacity with actual frames
+            algo_class = get_algorithm(self.algorithm_id)
+            if self.algorithm_id in (0, 1, 2):
+                bits = bits_per_px
                 algo = algo_class(bits=bits)
+            else:
+                algo = algo_class()
             cap = algo.capacity(frames_array)
             if len(full_payload) > cap:
                 raise ValueError(
@@ -96,23 +107,14 @@ class EmbedWorker(QThread):
 
             self.progress.emit(80)
             log_emitter.emit("Rebuilding video...")
-            video_service.frames_to_video(
+            actual_output = video_service.frames_to_video(
                 stego_frames, self.output_path, video_model.fps
             )
-
-            self.progress.emit(90)
-            if os.path.exists(temp_audio):
-                log_emitter.emit("Re-adding audio track...")
-                temp_novideo = self.output_path.replace(".mp4", "_novideo.mp4")
-                os.rename(self.output_path, temp_novideo)
-                ffmpeg.combine_audio_video(
-                    temp_novideo, temp_audio, self.output_path, video_model.fps
-                )
-                if os.path.exists(temp_novideo):
-                    os.remove(temp_novideo)
+            if actual_output:
+                self.output_path = actual_output
 
             self.progress.emit(100)
-            log_emitter.emit("Embedding completed successfully!")
+            log_emitter.emit(f"Embedding completed successfully! Saved to: {self.output_path}")
             self.finished.emit(self.output_path)
 
         except Exception as e:

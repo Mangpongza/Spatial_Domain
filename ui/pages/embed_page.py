@@ -231,7 +231,7 @@ class EmbedPage(QWidget):
         output_path, _ = QFileDialog.getSaveFileName(
             self, "บันทึกวิดีโอที่ฝังข้อมูลแล้ว",
             "outputs/stego_video.mp4",
-            "วิดีโอ (*.mp4);;ไฟล์ทั้งหมด (*)"
+            "วิดีโอ (*.mp4 *.mkv *.avi);;ไฟล์ทั้งหมด (*)"
         )
         if not output_path:
             return
