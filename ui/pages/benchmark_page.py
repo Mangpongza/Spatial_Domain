@@ -33,24 +33,24 @@ class BenchmarkPage(QWidget):
         layout.setSpacing(16)
         layout.setContentsMargins(24, 24, 24, 24)
 
-        header = QLabel("Benchmark")
+        header = QLabel("ทดสอบเปรียบเทียบ")
         header.setStyleSheet("font-size: 28px; font-weight: 700; color: #e0e0e0;")
         layout.addWidget(header)
 
-        video_group = QGroupBox("Test Video")
+        video_group = QGroupBox("วิดีโอทดสอบ")
         video_layout = QHBoxLayout(video_group)
-        self.video_label = QLabel("No video selected")
+        self.video_label = QLabel("ยังไม่ได้เลือกวิดีโอ")
         self.video_label.setStyleSheet("color: #888;")
-        self.browse_btn = QPushButton("Browse Video")
+        self.browse_btn = QPushButton("เลือกวิดีโอ")
         self.browse_btn.clicked.connect(self.browse_video)
         video_layout.addWidget(self.video_label, 1)
         video_layout.addWidget(self.browse_btn)
         layout.addWidget(video_group)
 
         controls = QHBoxLayout()
-        self.payload_size_input = QLabel("Payload size: 1024 bytes")
+        self.payload_size_input = QLabel("ขนาดข้อมูลที่ฝัง: 1024 ไบต์")
         self.payload_size_input.setStyleSheet("color: #ccc;")
-        self.run_btn = QPushButton("Run Benchmark")
+        self.run_btn = QPushButton("เริ่มทดสอบ")
         self.run_btn.setStyleSheet("""
             QPushButton {
                 background-color: #533483; color: white; font-size: 16px;
@@ -69,14 +69,14 @@ class BenchmarkPage(QWidget):
         self.progress_bar = StyledProgressBar()
         layout.addWidget(self.progress_bar)
 
-        results_group = QGroupBox("Benchmark Results")
+        results_group = QGroupBox("ผลการทดสอบ")
         results_layout = QVBoxLayout(results_group)
         self.results_table = QTableWidget()
         self.results_table.setColumnCount(9)
         self.results_table.setHorizontalHeaderLabels([
-            "Algorithm", "Embed Speed (B/s)", "Extract Speed (B/s)",
-            "Embed Time (s)", "Extract Time (s)", "PSNR (dB)",
-            "MSE", "BER", "Capacity (B)"
+            "อัลกอริทึม", "ความเร็วฝัง (B/s)", "ความเร็วถอน (B/s)",
+            "เวลาฝัง (วินาที)", "เวลาถอน (วินาที)", "PSNR (dB)",
+            "MSE", "BER", "ความจุ (B)"
         ])
         self.results_table.horizontalHeader().setStretchLastSection(True)
         self.results_table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
@@ -94,8 +94,8 @@ class BenchmarkPage(QWidget):
 
     def browse_video(self):
         path, _ = QFileDialog.getOpenFileName(
-            self, "Select Test Video", "",
-            "Video Files (*.mp4 *.mkv *.avi *.mov);;All Files (*)"
+            self, "เลือกวิดีโอทดสอบ", "",
+            "วิดีโอ (*.mp4 *.mkv *.avi *.mov);;ไฟล์ทั้งหมด (*)"
         )
         if path:
             self.video_label.setText(os.path.basename(path))

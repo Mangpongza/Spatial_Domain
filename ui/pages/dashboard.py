@@ -40,11 +40,11 @@ class DashboardPage(QWidget):
         layout.setSpacing(20)
         layout.setContentsMargins(24, 24, 24, 24)
 
-        header = QLabel("Dashboard")
+        header = QLabel("หน้าแรก")
         header.setStyleSheet("font-size: 28px; font-weight: 700; color: #e0e0e0;")
         layout.addWidget(header)
 
-        subtitle = QLabel("Audio-in-Video Steganography Tool")
+        subtitle = QLabel("เครื่องมือซ่อนข้อมูลเสียงในวิดีโอ")
         subtitle.setStyleSheet("font-size: 14px; color: #888; margin-top: -12px;")
         layout.addWidget(subtitle)
 
@@ -52,10 +52,10 @@ class DashboardPage(QWidget):
         stats_grid.setSpacing(16)
 
         self.cards = {
-            "algorithms": StatCard("Available Algorithms", "10", color="#533483"),
-            "methods": StatCard("Embedding Methods", "Standard LSB / Random / Adaptive / Edge / LSBM / LSBMR / PVD / BPCS / OPAP / PIT", color="#0f3460"),
-            "detection": StatCard("Detection", "Automatic Algorithm Detection", color="#00cc88"),
-            "formats": StatCard("Supported Formats", "Video: MP4, MKV, AVI, MOV\nAudio: WAV, MP3", color="#ffaa00"),
+            "algorithms": StatCard("อัลกอริทึมที่รองรับ", "10 วิธี", color="#533483"),
+            "methods": StatCard("วิธีการฝัง", "Standard LSB / Random / Adaptive / Edge / LSBM / LSBMR / PVD / BPCS / OPAP / PIT", color="#0f3460"),
+            "detection": StatCard("การตรวจจับ", "ตรวจจับอัลกอริทึมอัตโนมัติ", color="#00cc88"),
+            "formats": StatCard("รูปแบบที่รองรับ", "วิดีโอ: MP4, MKV, AVI, MOV\nเสียง: WAV, MP3", color="#ffaa00"),
         }
         stats_grid.addWidget(self.cards["algorithms"], 0, 0)
         stats_grid.addWidget(self.cards["formats"], 0, 1)
@@ -64,19 +64,19 @@ class DashboardPage(QWidget):
 
         layout.addLayout(stats_grid)
 
-        features_header = QLabel("Features")
+        features_header = QLabel("ความสามารถ")
         features_header.setStyleSheet("font-size: 18px; font-weight: 600; color: #e0e0e0; margin-top: 8px;")
         layout.addWidget(features_header)
 
         features = [
-            "Embed audio files (WAV/MP3) into videos (MP4/MKV/AVI/MOV)",
-            "Multiple spatial domain steganography algorithms",
-            "Automatic algorithm detection during extraction",
-            "Comprehensive analysis with PSNR, SSIM, MSE, BER metrics",
-            "Benchmark all algorithms with visual charts",
-            "Modern dark-themed Material Design UI",
-            "Drag & Drop support",
-            "Real-time logging console",
+            "ฝังไฟล์เสียง (WAV/MP3) ลงในวิดีโอ (MP4/MKV/AVI/MOV)",
+            "รองรับอัลกอริทึมซ่อนข้อมูลหลายรูปแบบ",
+            "ตรวจจับอัลกอริทึมที่ใช้อัตโนมัติตอนถอนข้อมูล",
+            "วิเคราะห์ผลด้วย PSNR, SSIM, MSE, BER",
+            "ทดสอบเปรียบเทียบทุกอัลกอริทึมพร้อมกราฟ",
+            "อินเทอร์เฟซ Material Design โทนสีเข้ม",
+            "รองรับการลากวางไฟล์ (Drag & Drop)",
+            "แสดงบันทึกการทำงานแบบเรียลไทม์",
         ]
         for feat in features:
             lbl = QLabel(f"  {feat}")

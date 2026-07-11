@@ -38,33 +38,33 @@ class EmbedPage(QWidget):
         layout.setSpacing(16)
         layout.setContentsMargins(24, 24, 24, 24)
 
-        header = QLabel("Embed Audio")
+        header = QLabel("ฝังเสียง")
         header.setStyleSheet("font-size: 28px; font-weight: 700; color: #e0e0e0;")
         layout.addWidget(header)
 
         input_section = QHBoxLayout()
         input_section.setSpacing(16)
 
-        video_group = QGroupBox("Video Input")
+        video_group = QGroupBox("วิดีโอต้นทาง")
         video_layout = QVBoxLayout(video_group)
-        self.video_drop = DragDropWidget("Drop Video Here\nMP4, MKV, AVI, MOV")
+        self.video_drop = DragDropWidget("วางวิดีโอที่นี่\nMP4, MKV, AVI, MOV")
         self.video_drop.file_dropped.connect(self.on_video_dropped)
-        self.video_path_label = QLabel("No video selected")
+        self.video_path_label = QLabel("ยังไม่ได้เลือกวิดีโอ")
         self.video_path_label.setStyleSheet("color: #888; font-size: 12px;")
-        self.video_browse_btn = QPushButton("Browse Video")
+        self.video_browse_btn = QPushButton("เลือกวิดีโอ")
         self.video_browse_btn.clicked.connect(self.browse_video)
         video_layout.addWidget(self.video_drop)
         video_layout.addWidget(self.video_path_label)
         video_layout.addWidget(self.video_browse_btn)
         input_section.addWidget(video_group)
 
-        audio_group = QGroupBox("Audio Input")
+        audio_group = QGroupBox("เสียงต้นทาง")
         audio_layout = QVBoxLayout(audio_group)
-        self.audio_drop = DragDropWidget("Drop Audio Here\nWAV, MP3")
+        self.audio_drop = DragDropWidget("วางเสียงที่นี่\nWAV, MP3")
         self.audio_drop.file_dropped.connect(self.on_audio_dropped)
-        self.audio_path_label = QLabel("No audio selected")
+        self.audio_path_label = QLabel("ยังไม่ได้เลือกเสียง")
         self.audio_path_label.setStyleSheet("color: #888; font-size: 12px;")
-        self.audio_browse_btn = QPushButton("Browse Audio")
+        self.audio_browse_btn = QPushButton("เลือกเสียง")
         self.audio_browse_btn.clicked.connect(self.browse_audio)
         audio_layout.addWidget(self.audio_drop)
         audio_layout.addWidget(self.audio_path_label)
@@ -74,12 +74,12 @@ class EmbedPage(QWidget):
         layout.addLayout(input_section)
 
         info_section = QHBoxLayout()
-        self.video_info_group = QGroupBox("Video Information")
+        self.video_info_group = QGroupBox("ข้อมูลวิดีโอ")
         self.video_info_layout = QFormLayout(self.video_info_group)
         self.video_info_widgets = {}
         for key, label in [
-            ("resolution", "Resolution"), ("fps", "FPS"), ("duration", "Duration"),
-            ("codec", "Codec"), ("total_frames", "Total Frames"), ("file_size", "File Size"),
+            ("resolution", "ความละเอียด"), ("fps", "เฟรมต่อวินาที"), ("duration", "ระยะเวลา"),
+            ("codec", "โคเดก"), ("total_frames", "จำนวนเฟรม"), ("file_size", "ขนาดไฟล์"),
         ]:
             lbl = QLabel("--")
             lbl.setStyleSheet("color: #ccc;")
@@ -87,12 +87,12 @@ class EmbedPage(QWidget):
             self.video_info_widgets[key] = lbl
         info_section.addWidget(self.video_info_group)
 
-        self.audio_info_group = QGroupBox("Audio Information")
+        self.audio_info_group = QGroupBox("ข้อมูลเสียง")
         self.audio_info_layout = QFormLayout(self.audio_info_group)
         self.audio_info_widgets = {}
         for key, label in [
-            ("sample_rate", "Sample Rate"), ("channels", "Channels"),
-            ("bit_depth", "Bit Depth"), ("duration", "Duration"), ("file_size", "File Size"),
+            ("sample_rate", "อัตราสุ่ม"), ("channels", "ช่องสัญญาณ"),
+            ("bit_depth", "ความลึกบิต"), ("duration", "ระยะเวลา"), ("file_size", "ขนาดไฟล์"),
         ]:
             lbl = QLabel("--")
             lbl.setStyleSheet("color: #ccc;")
@@ -101,7 +101,7 @@ class EmbedPage(QWidget):
         info_section.addWidget(self.audio_info_group)
         layout.addLayout(info_section)
 
-        algo_group = QGroupBox("Algorithm Selection")
+        algo_group = QGroupBox("เลือกอัลกอริทึม")
         algo_layout = QVBoxLayout(algo_group)
         algo_row = QHBoxLayout()
 
@@ -111,7 +111,7 @@ class EmbedPage(QWidget):
         self.algo_combo.addItem("Standard LSB 3-Bit", 2)
         self.algo_combo.addItem("Random LSB", 3)
         self.algo_combo.addItem("Adaptive LSB", 4)
-        self.algo_combo.addItem("Edge-based LSB", 5)
+        self.algo_combo.addItem("Edge-Based LSB", 5)
         self.algo_combo.addItem("LSBM", 6)
         self.algo_combo.addItem("LSBMR", 7)
         self.algo_combo.addItem("PVD", 8)
@@ -120,12 +120,12 @@ class EmbedPage(QWidget):
         self.algo_combo.addItem("PIT", 11)
         self.algo_combo.setMinimumWidth(200)
 
-        algo_row.addWidget(QLabel("Algorithm:"))
+        algo_row.addWidget(QLabel("อัลกอริทึม:"))
         algo_row.addWidget(self.algo_combo)
         algo_row.addStretch()
         algo_layout.addLayout(algo_row)
 
-        self.embed_btn = QPushButton("Start Embedding")
+        self.embed_btn = QPushButton("เริ่มฝังข้อมูล")
         self.embed_btn.setStyleSheet("""
             QPushButton {
                 background-color: #533483;
@@ -229,9 +229,9 @@ class EmbedPage(QWidget):
             return
 
         output_path, _ = QFileDialog.getSaveFileName(
-            self, "Save Stego Video",
+            self, "บันทึกวิดีโอที่ฝังข้อมูลแล้ว",
             "outputs/stego_video.mp4",
-            "Video Files (*.mp4);;All Files (*)"
+            "วิดีโอ (*.mp4);;ไฟล์ทั้งหมด (*)"
         )
         if not output_path:
             return

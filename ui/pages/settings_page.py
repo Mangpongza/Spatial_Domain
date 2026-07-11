@@ -23,52 +23,52 @@ class SettingsPage(QWidget):
         layout.setSpacing(16)
         layout.setContentsMargins(24, 24, 24, 24)
 
-        header = QLabel("Settings")
+        header = QLabel("ตั้งค่า")
         header.setStyleSheet("font-size: 28px; font-weight: 700; color: #e0e0e0;")
         layout.addWidget(header)
 
-        general_group = QGroupBox("General")
+        general_group = QGroupBox("ทั่วไป")
         general_layout = QFormLayout(general_group)
         self.theme_combo = QComboBox()
-        self.theme_combo.addItems(["Dark Mode (Default)", "Light Mode"])
+        self.theme_combo.addItems(["โหมดมืด (ค่าเริ่มต้น)", "โหมดสว่าง"])
         self.theme_combo.setCurrentIndex(0)
-        general_layout.addRow("Theme:", self.theme_combo)
+        general_layout.addRow("ธีม:", self.theme_combo)
 
-        self.save_outputs = QCheckBox("Save outputs in outputs/ folder")
+        self.save_outputs = QCheckBox("บันทึกผลลัพธ์ในโฟลเดอร์ outputs/")
         self.save_outputs.setChecked(True)
         general_layout.addRow("", self.save_outputs)
 
-        self.auto_clear = QCheckBox("Auto-clear log on new operation")
+        self.auto_clear = QCheckBox("ล้างบันทึกอัตโนมัติเมื่อเริ่มทำงานใหม่")
         self.auto_clear.setChecked(True)
         general_layout.addRow("", self.auto_clear)
         layout.addWidget(general_group)
 
-        algo_group = QGroupBox("Algorithm Defaults")
+        algo_group = QGroupBox("ค่าพื้นฐานอัลกอริทึม")
         algo_layout = QFormLayout(algo_group)
         self.default_algo = QComboBox()
         self.default_algo.addItems([
             "Standard LSB 1-Bit", "Standard LSB 2-Bit", "Standard LSB 3-Bit",
-            "Random LSB", "Adaptive LSB", "Edge-based LSB",
+            "Random LSB", "Adaptive LSB", "Edge-Based LSB",
             "LSBM", "LSBMR", "PVD", "BPCS", "OPAP", "PIT"
         ])
-        algo_layout.addRow("Default Algorithm:", self.default_algo)
+        algo_layout.addRow("อัลกอริทึมเริ่มต้น:", self.default_algo)
         layout.addWidget(algo_group)
 
-        perf_group = QGroupBox("Performance")
+        perf_group = QGroupBox("ประสิทธิภาพ")
         perf_layout = QFormLayout(perf_group)
         self.thread_count = QSpinBox()
         self.thread_count.setMinimum(1)
         self.thread_count.setMaximum(16)
         self.thread_count.setValue(4)
-        perf_layout.addRow("Thread Count:", self.thread_count)
+        perf_layout.addRow("จำนวนเธรด:", self.thread_count)
 
-        self.cache_frames = QCheckBox("Cache frames in memory")
+        self.cache_frames = QCheckBox("แคชเฟรมไว้ในหน่วยความจำ")
         self.cache_frames.setChecked(True)
         perf_layout.addRow("", self.cache_frames)
         layout.addWidget(perf_group)
 
         btn_layout = QHBoxLayout()
-        self.save_btn = QPushButton("Save Settings")
+        self.save_btn = QPushButton("บันทึกการตั้งค่า")
         self.save_btn.setStyleSheet("""
             QPushButton {
                 background-color: #533483; color: white;

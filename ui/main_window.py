@@ -28,7 +28,7 @@ class SideBarButton(QPushButton):
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Spatial Domain Steganography")
+        self.setWindowTitle("ซ่อนข้อมูลในวิดีโอ - Spatial Domain Steganography")
         self.setMinimumSize(1200, 800)
         self.resize(1400, 900)
         self.setStyleSheet(DARK_STYLE)
@@ -51,7 +51,7 @@ class MainWindow(QMainWindow):
         sidebar_layout.setContentsMargins(8, 16, 8, 16)
         sidebar_layout.setSpacing(4)
 
-        logo = QLabel("🎵 Stego")
+        logo = QLabel("🎵 StegoPro")
         logo.setStyleSheet("""
             font-size: 20px;
             font-weight: 700;
@@ -66,13 +66,13 @@ class MainWindow(QMainWindow):
 
         self.nav_buttons = {}
         nav_items = [
-            ("dashboard", "📊", "Dashboard"),
-            ("embed", "📥", "Embed Audio"),
-            ("extract", "📤", "Extract Audio"),
-            ("analysis", "📈", "Analysis"),
-            ("benchmark", "⚡", "Benchmark"),
-            ("settings", "⚙️", "Settings"),
-            ("about", "ℹ️", "About"),
+            ("dashboard", "📊", "หน้าแรก"),
+            ("embed", "📥", "ฝังเสียง"),
+            ("extract", "📤", "ถอนเสียง"),
+            ("analysis", "📈", "วิเคราะห์"),
+            ("benchmark", "⚡", "ทดสอบ"),
+            ("settings", "⚙️", "ตั้งค่า"),
+            ("about", "ℹ️", "เกี่ยวกับ"),
         ]
 
         for key, icon, label in nav_items:
@@ -123,7 +123,7 @@ class MainWindow(QMainWindow):
                 padding: 4px 12px;
             }
         """)
-        self.status_bar.showMessage("Ready")
+        self.status_bar.showMessage("พร้อมทำงาน")
 
         self.navigate_to("dashboard")
 

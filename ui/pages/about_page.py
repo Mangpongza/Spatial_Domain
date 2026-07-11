@@ -22,7 +22,7 @@ class AboutPage(QWidget):
         layout.setSpacing(16)
         layout.setContentsMargins(24, 24, 24, 24)
 
-        header = QLabel("About")
+        header = QLabel("เกี่ยวกับ")
         header.setStyleSheet("font-size: 28px; font-weight: 700; color: #e0e0e0;")
         layout.addWidget(header)
 
@@ -49,31 +49,31 @@ class AboutPage(QWidget):
         card_layout.setSpacing(12)
 
         description = QLabel(
-            "A modern desktop application for Audio-in-Video Steganography "
-            "using Spatial Domain Techniques with automatic algorithm detection."
+            "แอปพลิเคชันเดสก์ท็อปสำหรับซ่อนข้อมูลเสียงในวิดีโอ "
+            "โดยใช้เทคนิค Spatial Domain พร้อมระบบตรวจจับอัลกอริทึมอัตโนมัติ"
         )
         description.setWordWrap(True)
         description.setStyleSheet("font-size: 14px; color: #ccc; line-height: 1.6;")
         card_layout.addWidget(description)
 
-        features_title = QLabel("Key Features:")
+        features_title = QLabel("ความสามารถหลัก:")
         features_title.setStyleSheet("font-size: 16px; font-weight: 600; color: #e0e0e0; margin-top: 8px;")
         card_layout.addWidget(features_title)
 
         features = [
-            "10 Spatial Domain Steganography Algorithms",
-            "Automatic Algorithm Detection during Extraction",
-            "Audio (WAV/MP3) hiding in Video (MP4/MKV/AVI/MOV)",
-            "Comprehensive Analysis (PSNR, SSIM, MSE, BER)",
-            "Full Algorithm Benchmarking Suite",
-            "Modern Dark-Themed Material Design Interface",
+            "อัลกอริทึมซ่อนข้อมูลแบบ Spatial Domain 10 วิธี",
+            "ตรวจจับอัลกอริทึมที่ใช้อัตโนมัติตอนถอนข้อมูล",
+            "ซ่อนเสียง (WAV/MP3) ในวิดีโอ (MP4/MKV/AVI/MOV)",
+            "วิเคราะห์ผลครบถ้วน (PSNR, SSIM, MSE, BER)",
+            "ทดสอบเปรียบเทียบทุกอัลกอริทึม",
+            "อินเทอร์เฟซ Material Design โทนสีเข้มทันสมัย",
         ]
         for feat in features:
             lbl = QLabel(f"  {feat}")
             lbl.setStyleSheet("font-size: 13px; color: #aaa; padding: 2px 0;")
             card_layout.addWidget(lbl)
 
-        tech_title = QLabel("Technology Stack:")
+        tech_title = QLabel("เทคโนโลยีที่ใช้:")
         tech_title.setStyleSheet("font-size: 16px; font-weight: 600; color: #e0e0e0; margin-top: 8px;")
         card_layout.addWidget(tech_title)
         techs = ", ".join([
@@ -85,7 +85,7 @@ class AboutPage(QWidget):
         tech_label.setStyleSheet("font-size: 13px; color: #aaa;")
         card_layout.addWidget(tech_label)
 
-        copyright_label = QLabel("Spatial Domain Steganography Tool")
+        copyright_label = QLabel("เครื่องมือซ่อนข้อมูลเสียงในวิดีโอ (Spatial Domain Steganography)")
         copyright_label.setStyleSheet("font-size: 12px; color: #666; margin-top: 16px;")
         copyright_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         card_layout.addWidget(copyright_label)

@@ -6,7 +6,7 @@ ALGORITHM_NAMES = {
     2: "Standard LSB 3-Bit",
     3: "Random LSB",
     4: "Adaptive LSB",
-    5: "Edge-based LSB",
+    5: "Edge-Based LSB",
     6: "LSBM",
     7: "LSBMR",
     8: "PVD",

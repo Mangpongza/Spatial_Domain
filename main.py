@@ -16,12 +16,10 @@ def main():
     setup_environment()
 
     app = QApplication(sys.argv)
-    app.setApplicationName("Spatial Domain Steganography")
+    app.setApplicationName("ซ่อนข้อมูลในวิดีโอ (Spatial Domain Steganography)")
     app.setOrganizationName("SpatialDomain")
-    app.setAttribute(Qt.ApplicationAttribute.AA_UseHighDpiPixmaps, True)
-
-    if hasattr(Qt.ApplicationAttribute, "AA_EnableHighDpiScaling"):
-        app.setAttribute(Qt.ApplicationAttribute.AA_EnableHighDpiScaling, True)
+    # PyQt6 handles HighDPI scaling automatically (AA_UseHighDpiPixmaps
+    # and AA_EnableHighDpiScaling were removed -- they only exist in PyQt5)
 
     window = MainWindow()
     controller = MainController(window)

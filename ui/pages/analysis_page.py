@@ -38,31 +38,31 @@ class AnalysisPage(QWidget):
         layout.setSpacing(16)
         layout.setContentsMargins(24, 24, 24, 24)
 
-        header = QLabel("Analysis")
+        header = QLabel("วิเคราะห์ผล")
         header.setStyleSheet("font-size: 28px; font-weight: 700; color: #e0e0e0;")
         layout.addWidget(header)
 
         input_section = QHBoxLayout()
-        orig_group = QGroupBox("Original Video")
+        orig_group = QGroupBox("วิดีโอต้นฉบับ")
         orig_layout = QVBoxLayout(orig_group)
-        self.orig_drop = DragDropWidget("Drop Original Video")
+        self.orig_drop = DragDropWidget("วางวิดีโอต้นฉบับ")
         self.orig_drop.file_dropped.connect(self.on_original_dropped)
-        self.orig_path_label = QLabel("No file selected")
+        self.orig_path_label = QLabel("ยังไม่ได้เลือกไฟล์")
         self.orig_path_label.setStyleSheet("color: #888;")
-        self.orig_browse = QPushButton("Browse")
+        self.orig_browse = QPushButton("เลือกไฟล์")
         self.orig_browse.clicked.connect(lambda: self.browse_video(True))
         orig_layout.addWidget(self.orig_drop)
         orig_layout.addWidget(self.orig_path_label)
         orig_layout.addWidget(self.orig_browse)
         input_section.addWidget(orig_group)
 
-        stego_group = QGroupBox("Stego Video")
+        stego_group = QGroupBox("วิดีโอที่ฝังข้อมูลแล้ว")
         stego_layout = QVBoxLayout(stego_group)
-        self.stego_drop = DragDropWidget("Drop Stego Video")
+        self.stego_drop = DragDropWidget("วางวิดีโอที่ฝังข้อมูลแล้ว")
         self.stego_drop.file_dropped.connect(self.on_stego_dropped)
-        self.stego_path_label = QLabel("No file selected")
+        self.stego_path_label = QLabel("ยังไม่ได้เลือกไฟล์")
         self.stego_path_label.setStyleSheet("color: #888;")
-        self.stego_browse = QPushButton("Browse")
+        self.stego_browse = QPushButton("เลือกไฟล์")
         self.stego_browse.clicked.connect(lambda: self.browse_video(False))
         stego_layout.addWidget(self.stego_drop)
         stego_layout.addWidget(self.stego_path_label)
@@ -71,7 +71,7 @@ class AnalysisPage(QWidget):
         layout.addLayout(input_section)
 
         btn_row = QHBoxLayout()
-        self.analyze_btn = QPushButton("Analyze")
+        self.analyze_btn = QPushButton("วิเคราะห์")
         self.analyze_btn.setStyleSheet("""
             QPushButton {
                 background-color: #533483; color: white; font-size: 16px;
@@ -86,11 +86,11 @@ class AnalysisPage(QWidget):
         btn_row.addStretch()
         layout.addLayout(btn_row)
 
-        results_group = QGroupBox("Metrics Results")
+        results_group = QGroupBox("ผลการวิเคราะห์")
         results_layout = QVBoxLayout(results_group)
         self.results_table = QTableWidget()
         self.results_table.setColumnCount(2)
-        self.results_table.setHorizontalHeaderLabels(["Metric", "Value"])
+        self.results_table.setHorizontalHeaderLabels(["ค่า", "ผลลัพธ์"])
         self.results_table.horizontalHeader().setStretchLastSection(True)
         self.results_table.setAlternatingRowColors(True)
         results_layout.addWidget(self.results_table)
@@ -109,8 +109,8 @@ class AnalysisPage(QWidget):
 
     def browse_video(self, is_original: bool):
         path, _ = QFileDialog.getOpenFileName(
-            self, "Select Video", "",
-            "Video Files (*.mp4 *.mkv *.avi *.mov);;All Files (*)"
+            self, "เลือกวิดีโอ", "",
+            "วิดีโอ (*.mp4 *.mkv *.avi *.mov);;ไฟล์ทั้งหมด (*)"
         )
         if path:
             if is_original:
@@ -182,12 +182,12 @@ class AnalysisPage(QWidget):
                 "PSNR (dB)": f"{psnr:.4f}",
                 "SSIM": f"{ssim_val:.6f}",
                 "MSE": f"{mse:.6f}",
-                "Bit Error Rate (BER)": f"{ber:.6f}",
-                "Frame Count": str(min_frames),
-                "Resolution": f"{orig[0].shape[1]}x{orig[0].shape[0]}",
-                "Payload Capacity (bytes)": str(capacity),
-                "Estimated Payload (bytes)": str(payload_size),
-                "Payload Usage (%)": f"{(payload_size / capacity * 100) if capacity > 0 else 0:.2f}",
+                "อัตราความผิดพลาด (BER)": f"{ber:.6f}",
+                "จำนวนเฟรม": str(min_frames),
+                "ความละเอียด": f"{orig[0].shape[1]}x{orig[0].shape[0]}",
+                "ความจุข้อมูล (ไบต์)": str(capacity),
+                "ขนาดข้อมูลที่ฝังโดยประมาณ (ไบต์)": str(payload_size),
+                "อัตราการใช้พื้นที่ (%)": f"{(payload_size / capacity * 100) if capacity > 0 else 0:.2f}",
             }
 
             self.progress_bar.setValue(80)

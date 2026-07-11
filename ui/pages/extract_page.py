@@ -32,30 +32,30 @@ class ExtractPage(QWidget):
         layout.setSpacing(16)
         layout.setContentsMargins(24, 24, 24, 24)
 
-        header = QLabel("Extract Audio")
+        header = QLabel("ถอนเสียง")
         header.setStyleSheet("font-size: 28px; font-weight: 700; color: #e0e0e0;")
         layout.addWidget(header)
 
-        video_group = QGroupBox("Stego Video Input")
+        video_group = QGroupBox("วิดีโอที่ฝังข้อมูลแล้ว")
         video_layout = QVBoxLayout(video_group)
-        self.video_drop = DragDropWidget("Drop Stego Video Here\nMP4, MKV, AVI, MOV")
+        self.video_drop = DragDropWidget("วางวิดีโอที่ฝังข้อมูลแล้วที่นี่\nMP4, MKV, AVI, MOV")
         self.video_drop.file_dropped.connect(self.on_video_dropped)
-        self.video_path_label = QLabel("No video selected")
+        self.video_path_label = QLabel("ยังไม่ได้เลือกวิดีโอ")
         self.video_path_label.setStyleSheet("color: #888; font-size: 12px;")
-        self.video_browse_btn = QPushButton("Browse Video")
+        self.video_browse_btn = QPushButton("เลือกวิดีโอ")
         self.video_browse_btn.clicked.connect(self.browse_video)
         video_layout.addWidget(self.video_drop)
         video_layout.addWidget(self.video_path_label)
         video_layout.addWidget(self.video_browse_btn)
         layout.addWidget(video_group)
 
-        mode_group = QGroupBox("Extraction Mode")
+        mode_group = QGroupBox("โหมดการถอนข้อมูล")
         mode_layout = QVBoxLayout(mode_group)
         self.mode_group = QButtonGroup(self)
 
-        self.auto_radio = QRadioButton("Auto Detect")
+        self.auto_radio = QRadioButton("ตรวจจับอัตโนมัติ")
         self.auto_radio.setChecked(True)
-        self.manual_radio = QRadioButton("Manual")
+        self.manual_radio = QRadioButton("เลือกเอง")
 
         self.mode_group.addButton(self.auto_radio, 0)
         self.mode_group.addButton(self.manual_radio, 1)
@@ -65,17 +65,17 @@ class ExtractPage(QWidget):
         mode_layout.addWidget(self.manual_radio)
 
         self.manual_algo_layout = QHBoxLayout()
-        self.manual_algo_layout.addWidget(QLabel("Algorithm:"))
+        self.manual_algo_layout.addWidget(QLabel("อัลกอริทึม:"))
         self.algo_combo = QComboBox()
-        for name, aid in sorted(ALGORITHM_NAMES.items()):
-            self.algo_combo.addItem(name, aid)
+        for algo_id, algo_name in sorted(ALGORITHM_NAMES.items()):
+            self.algo_combo.addItem(algo_name, algo_id)
         self.algo_combo.setEnabled(False)
         self.manual_algo_layout.addWidget(self.algo_combo)
         self.manual_algo_layout.addStretch()
         mode_layout.addLayout(self.manual_algo_layout)
         layout.addWidget(mode_group)
 
-        self.extract_btn = QPushButton("Start Extraction")
+        self.extract_btn = QPushButton("เริ่มถอนข้อมูล")
         self.extract_btn.setStyleSheet("""
             QPushButton {
                 background-color: #0f3460;
@@ -127,9 +127,9 @@ class ExtractPage(QWidget):
             return
 
         output_path, _ = QFileDialog.getSaveFileName(
-            self, "Save Extracted Audio",
+            self, "บันทึกเสียงที่ถอนแล้ว",
             "outputs/extracted_audio.wav",
-            "Audio Files (*.wav *.mp3);;All Files (*)"
+            "เสียง (*.wav *.mp3);;ไฟล์ทั้งหมด (*)"
         )
         if not output_path:
             return
